@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 youtube-basic-rss
-version: 20160930-1931
+version: 20161001-1129
 
 spenibus.net
 https://github.com/spenibus/youtube-basic-rss-php
@@ -77,12 +77,31 @@ if($user) {
     $nodes = $dom->getElementsByTagName('entry');
     foreach($nodes as $node) {
 
+        $itemTitle = $node->getElementsByTagName('title')->item(0)->nodeValue;
+
+        $itemPubDate = gmdate(
+            DATE_RSS,
+            strtotime($node->getElementsByTagName('published')->item(0)->nodeValue)
+        );
+
+        $itemLink = $node->getElementsByTagName('link')->item(0)->getAttribute('href');
+
+        $itemDescription = $node->getElementsByTagNameNS(
+            'http://search.yahoo.com/mrss/',
+            'description'
+        )->item(0)->nodeValue;
+
+        $itemPreviewImage = $node->getElementsByTagNameNS(
+            'http://search.yahoo.com/mrss/',
+            'thumbnail'
+        )->item(0)->getAttribute('url');
+
         $items .= '
             <item>
-                <title><![CDATA['.$node->getElementsByTagName('title')->item(0)->nodeValue.']]></title>
-                <pubDate>'.gmdate(DATE_RSS, strtotime($node->getElementsByTagName('published')->item(0)->nodeValue)).'</pubDate>
-                <link><![CDATA['.$node->getElementsByTagName('link')->item(0)->getAttribute('href').']]></link>
-                <description><![CDATA['.$node->getElementsByTagNameNS('http://search.yahoo.com/mrss/', 'description')->item(0)->nodeValue.']]></description>
+                <title><![CDATA['.$itemTitle.']]></title>
+                <pubDate>'.$itemPubDate.'</pubDate>
+                <link><![CDATA['.$itemLink.']]></link>
+                <description><![CDATA['.$itemDescription.'<br/><img src="'.$itemPreviewImage.'" alt="preview"/>]]></description>
             </item>';
     }
 
