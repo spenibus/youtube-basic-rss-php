@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************************
 youtube-basic-rss
-version: 20161001-1129
+version: 20161005-2110
 
 spenibus.net
 https://github.com/spenibus/youtube-basic-rss-php
@@ -27,8 +27,9 @@ $CFG_SELF_FULL        = $CFG_PROTOCOL_HOST.$CFG_SELF;
 $CFG_REQUEST_URI_FULL = $CFG_PROTOCOL_HOST.$CFG_REQUEST_URI;
 
 
-// user
-$user = $_GET['user'];
+// feed config
+$CFG_USER  = $_GET['user'];
+$CFG_TITLE = $_GET['title'];
 
 
 
@@ -42,10 +43,10 @@ function hsc($str) {
 
 
 /******************************************************************** process */
-if($user) {
+if($CFG_USER) {
 
     // user source feed url
-    $srcUrl = 'https://www.youtube.com/feeds/videos.xml?channel_id='.$user;
+    $srcUrl = 'https://www.youtube.com/feeds/videos.xml?channel_id='.$CFG_USER;
 
 
     // get user source feed
@@ -110,14 +111,20 @@ if($user) {
     $xmlns = "\n   ".implode("\n   ", $data['xmlns']);
 
 
+    // feed title
+    $feedTitle = $CFG_TITLE
+        ? $CFG_TITLE
+        : $dom->getElementsByTagName('feed')->item(0)->getElementsByTagName('title')->item(0)->nodeValue.' - youtube-basic-rss';;
+
+
     // finalize
     $rss = '<?xml version="1.0" encoding="UTF-8"?>
     <rss version="2.0"'.$xmlns.'>
         <channel>
-            <title><![CDATA['.$dom->getElementsByTagName('feed')->item(0)->getElementsByTagName('title')->item(0)->nodeValue.']]> - youtube-basic-rss</title>
+            <title><![CDATA['.$feedTitle.']]></title>
             <pubDate>'.hsc(gmdate(DATE_RSS)).'</pubDate>
             <link>'.hsc($CFG_REQUEST_URI_FULL).'</link>
-            <description>source: '.hsc($srcUrl).'</description>'.
+            <description><![CDATA[source: '.hsc($srcUrl).']]></description>'.
             $items.'
         </channel>
     </rss>';
