@@ -16,9 +16,11 @@ A basic rss feed for any youtube channel. It repackages data from the atom feed.
 Usage
 -----
 
-- index.php?user=%user%
-    - %user% is the youtube channel (name or id, same as in the atom feed url)
-
+- GET arguments
+<pre>
+    user  - the youtube channel id (same as in the atom feed url)
+    title - set a custom title for the feed
+</pre>
 
 
 
