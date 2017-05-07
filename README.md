@@ -18,8 +18,9 @@ Usage
 
 - GET arguments
 <pre>
-    user  - the youtube channel id (same as in the atom feed url)
-    title - set a custom title for the feed
+    user   - the youtube channel id (same as in the atom feed url)
+    title  - set a custom title for the feed
+    showId - show video id in item title (set to non null value)
 </pre>
 
 

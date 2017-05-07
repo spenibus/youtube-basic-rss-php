@@ -28,8 +28,9 @@ $CFG_REQUEST_URI_FULL = $CFG_PROTOCOL_HOST.$CFG_REQUEST_URI;
 
 
 // feed config
-$CFG_USER  = $_GET['user'];
-$CFG_TITLE = $_GET['title'];
+$CFG_USER    = $_GET['user'];
+$CFG_TITLE   = $_GET['title'];
+$CFG_SHOW_ID = $_GET['showId'] ? true: false;
 
 
 
@@ -78,6 +79,13 @@ if($CFG_USER) {
     $nodes = $dom->getElementsByTagName('entry');
     foreach($nodes as $node) {
 
+        $itemVideoId = '';
+        if($CFG_SHOW_ID) {
+            $itemVideoId = $node->getElementsByTagName('id')->item(0)->nodeValue;
+            $itemVideoId = array_reverse(explode(':', $itemVideoId))[0];
+            $itemVideoId = '['.$itemVideoId.'] ';
+        }
+
         $itemTitle = $node->getElementsByTagName('title')->item(0)->nodeValue;
 
         $itemPubDate = gmdate(
@@ -99,7 +107,7 @@ if($CFG_USER) {
 
         $items .= '
             <item>
-                <title><![CDATA['.$itemTitle.']]></title>
+                <title><![CDATA['.$itemVideoId.$itemTitle.']]></title>
                 <pubDate>'.$itemPubDate.'</pubDate>
                 <link><![CDATA['.$itemLink.']]></link>
                 <description><![CDATA['.$itemDescription.'<br/><img src="'.$itemPreviewImage.'" alt="preview"/>]]></description>
